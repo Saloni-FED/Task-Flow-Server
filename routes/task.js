@@ -7,7 +7,7 @@ const route = express.Router();
 route.get("/getalltask",getAllBySpecificUserTask)
 route.get("/:id",getTaskBySpecificId)
 route.post("/createTask",createBySpecificUserTask)
-route.patch("/:id",updateBySpecificUserTask)
+route.put("/:id",updateBySpecificUserTask)
 route.delete("/:id",deleteBySpecificUserTask)
 
 
