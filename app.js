@@ -17,6 +17,7 @@ app.use(cors());
 
 // Ale to send data in json format
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // For testing
 app.get("/", (req, res) => {
