@@ -4,6 +4,6 @@ import { upload } from "../middleware/multer.js";
 
 const route = express();
 
-route.put("/profile/update", upload.single("image"), profileUpdate);
+route.post("/profile/update", upload.single("image"), profileUpdate);
 
 export default route;
