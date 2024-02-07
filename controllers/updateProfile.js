@@ -2,17 +2,26 @@ import Users from "../models/users.js";
 import { uploadFileInCloudinary } from "../utils/cloudinary.js";
 import sharp from "sharp";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); 
+// console.log("fiest ", __dirname)
 
 export const profileUpdate = async (req, res) => {
   const { username, bio } = req.body;
   let image = req.file ? req.file.path : null;
   let cloudinaryResponse;
-  let optimizedImagePath = null; // Define it here
+  let optimizedImagePath = null; 
 
   try {
-    // Compress and upload image to Cloudinary
     if (image) {
-      optimizedImagePath = `./public/compressed/optimized-${Date.now()}.jpg`; 
+      const compressedDir = path.join(__dirname, '../public/compressed');
+      // console.log("compressedDir", compressedDir)
+      fs.mkdirSync(compressedDir, { recursive: true }); 
+      optimizedImagePath = path.join(compressedDir, `optimized-${Date.now()}.jpg`); 
+      // console.log(optimizedImagePath)
       await sharp(image)
         .resize({ width: 800 })
         .jpeg({ quality: 80 })

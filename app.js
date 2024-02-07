@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
   res.send("Server is started");
 });
 
-// Routes
+// Route
 
 app.use("/api/v1", UsersRoutes);
 app.use("/api/v1", auth, TaskRoutes);
