@@ -7,7 +7,6 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); 
-// console.log("fiest ", __dirname)
 
 export const profileUpdate = async (req, res) => {
   const { username, bio } = req.body;
@@ -17,11 +16,10 @@ export const profileUpdate = async (req, res) => {
 
   try {
     if (image) {
-      const compressedDir = path.join(__dirname, '../public/compressed');
-      // console.log("compressedDir", compressedDir)
+      const compressedDir = path.join(process.cwd(), 'public', 'compressed');
       fs.mkdirSync(compressedDir, { recursive: true }); 
-      optimizedImagePath = path.join(compressedDir, `optimized-${Date.now()}.jpg`); 
-      // console.log(optimizedImagePath)
+      optimizedImagePath = path.join(compressedDir, `optimized-${Date.now()}.jpg`);
+      
       await sharp(image)
         .resize({ width: 800 })
         .jpeg({ quality: 80 })
@@ -43,10 +41,6 @@ export const profileUpdate = async (req, res) => {
     if (cloudinaryResponse) user.image = cloudinaryResponse.secure_url;
 
     await user.save();
-
-    if (optimizedImagePath) {
-      fs.unlinkSync(optimizedImagePath);
-    }
 
     res.status(200).json({
       message: "Profile updated successfully",
