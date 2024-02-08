@@ -2,35 +2,41 @@ import Users from "../models/users.js";
 import { uploadFileInCloudinary } from "../utils/cloudinary.js";
 import sharp from "sharp";
 import fs from "fs";
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
+// Determine the current directory
 const __dirname = process.cwd();
+
 export const profileUpdate = async (req, res) => {
   const { username, bio } = req.body;
   let image = req.file ? req.file.path : null;
   let cloudinaryResponse;
-  let optimizedImagePath = null; 
-
+  let optimizedImagePath = null;
+  console.log(process.env.NODE_ENV);
   try {
     if (image) {
-      const uploadsDir = `${__dirname}/uploads`;
-      console.log("upload dir", uploadsDir)
-      const compressedDir = `${uploadsDir}/tmp`;
-      console.log("compressed dir", compressedDir)
-      
-      // Create the directories if they don't exist
-      fs.mkdirSync(uploadsDir, { recursive: true });
-      fs.mkdirSync(compressedDir, { recursive: true });
-      
-      optimizedImagePath = `${compressedDir}/optimized-${Date.now()}.jpg`;
-      console.log(optimizedImagePath, "Optimized path")
+      console.log(image.originalname);
+      console.log(image);
+      const compressedImagePath =
+        process.env.NODE_ENV === "development"
+          ? path.join(__dirname, "/uploads", `${Date.now().toString()}_.jpg`)
+          : path.join("/tmp", `${Date.now().toString()}_.jpg`);
+
+      // Using sharp to resize and optimize the image
       await sharp(image)
         .resize({ width: 800 })
         .jpeg({ quality: 80 })
-        .toFile(optimizedImagePath);
+        .toFile(compressedImagePath);
 
-      cloudinaryResponse = await uploadFileInCloudinary(optimizedImagePath);
+      // Upload the optimized image to Cloudinary
+      cloudinaryResponse = await uploadFileInCloudinary(compressedImagePath);
+
+      if (cloudinaryResponse) {
+        fs.unlinkSync(compressedImagePath);
+      }
     }
 
     // Find user by ID
