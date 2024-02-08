@@ -16,7 +16,7 @@ export const profileUpdate = async (req, res) => {
     if (image) {
       const uploadsDir = `${__dirname}/uploads`;
       console.log("upload dir", uploadsDir)
-      const compressedDir = `${uploadsDir}/compressed`;
+      const compressedDir = `${uploadsDir}/tmp`;
       console.log("compressed dir", compressedDir)
       
       // Create the directories if they don't exist
