@@ -16,8 +16,9 @@ export const createDeletedHistory = async (req, res) => {
 };
 
 export const getAllDeletedHistory = async (req, res) => {
+  const userId = req.user.userId;
   try {
-    const deletedHistory = await DeletedHistory.find();
+    const deletedHistory = await DeletedHistory.find({ userId : userId});
     res.status(200).json(deletedHistory);
   } catch (error) {
     console.error("Error fetching deleted history:", error);
