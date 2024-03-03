@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
   },
   createdAt: {
     type: Date,
@@ -31,16 +31,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// userSchema.pre("save", async function (next) {
-//   try {
-//     const salt = await bcrypt.genSalt(10);
-//     const hashedPassword = await bcrypt.hash(this.password, salt);
-//     this.password = hashedPassword;
-//     next();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+
 
 const Users = mongoose.model("Users", userSchema);
 
